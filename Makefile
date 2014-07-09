@@ -348,7 +348,11 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-KERNEL_FLAGS	= -munaligned-access -mfpu=neon-vfpv4 -ffast-math \
+KERNEL_FLAGS	= -munaligned-access -mfpu=neon-vfpv4 \
+		  -fgcse-after-reload -fgcse-sm \
+		  -fgcse-las -ftree-loop-im -ftree-loop-ivcanon -fweb \
+		  -frename-registers -ftree-loop-linear -ftree-vectorize \
+		  -fmodulo-sched -ffast-math \
 		  -funsafe-math-optimizations
 CFLAGS_MODULE   = -DMODULE $(KERNEL_FLAGS)
 AFLAGS_MODULE   =
