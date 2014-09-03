@@ -1493,6 +1493,12 @@ functions_show(struct device *pdev, struct device_attribute *attr, char *buf)
 	return buff - buf;
 }
 
+static struct hid_usb_data hid_usb = {
+	.hid_enabled = 0,
+};
+
+module_param_named(usb_keyboard, hid_usb.hid_enabled, uint, 0664);
+
 static ssize_t
 functions_store(struct device *pdev, struct device_attribute *attr,
 			       const char *buff, size_t size)
@@ -1502,7 +1508,7 @@ functions_store(struct device *pdev, struct device_attribute *attr,
 	char buf[256], *b;
 	char aliases[256], *a;
 	int err;
-	int hid_enabled;
+	int hid_usb_enabled = 0;
 	int is_ffs;
 	int ffs_enabled = 0;
 
@@ -1580,7 +1586,7 @@ functions_store(struct device *pdev, struct device_attribute *attr,
 					if (hid_usb.hid_enabled == 1)
 						hid_usb_enabled = 1;
 					else
-						hid_usb_enabled = NULL;
+						hid_usb_enabled = 0;
 				}
 			}
 
@@ -2144,7 +2150,7 @@ static int android_create_device(struct android_dev *dev)
 	struct device_attribute **attrs = android_usb_attributes;
 	struct device_attribute *attr;
 	int err;
-	int hid_enabled;
+	int hid_usb_enabled;
 
 	dev->dev = device_create(android_class, NULL,
 					MKDEV(0, 0), NULL, "android0");
