@@ -122,9 +122,9 @@ enum mif_bus_idx {
 	LV_6,
 	LV_7,
 	LV_8,
-#if !defined(CONFIG_SUPPORT_WQXGA)
+//#if !defined(CONFIG_SUPPORT_WQXGA)
 	LV_9,
-#endif
+//#endif
 	LV_END,
 };
 
@@ -145,9 +145,9 @@ struct mif_bus_opp_table mif_bus_opp_list[] = {
 	{LV_6, 266000,  875000, 0},
 	{LV_7, 200000,  875000, 0},
 	{LV_8, 160000,  875000, 0},
-#if !defined(CONFIG_SUPPORT_WQXGA)
+//#if !defined(CONFIG_SUPPORT_WQXGA)
 	{LV_9, 133000,  875000, 0},
-#endif
+//#endif
 };
 
 static unsigned int exynos5420_dram_param[][3] = {
