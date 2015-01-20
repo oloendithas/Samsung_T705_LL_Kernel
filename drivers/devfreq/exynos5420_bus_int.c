@@ -59,9 +59,9 @@ enum int_bus_idx {
 	LV_3,
 	LV_4,
 	LV_5,
-#if !defined(CONFIG_SUPPORT_WQXGA)
+//#if !defined(CONFIG_SUPPORT_WQXGA)
 	LV_6,
-#endif
+//#endif
 	LV_END,
 };
 
@@ -89,12 +89,12 @@ struct int_bus_opp_table int_bus_opp_list[] = {
 	{LV_2,   400000,  987500, 0},
 	{LV_3,   333000,  950000, 0},
 	{LV_4,   222000,  950000, 0},
-#if !defined(CONFIG_SUPPORT_WQXGA)
-	{LV_5,   111000,  950000, 0},
-	{LV_6,    83000,  925000, 0},
-#else
+//#if !defined(CONFIG_SUPPORT_WQXGA)
 	{LV_5,   133000,  925000, 0},
-#endif
+	{LV_6,    83000,  925000, 0},
+//#else
+//	{LV_5,   133000,  925000, 0},
+//#endif
 };
 
 struct int_clk_info {
