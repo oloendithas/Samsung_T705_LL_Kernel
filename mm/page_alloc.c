@@ -191,10 +191,10 @@ static char * const zone_names[MAX_NR_ZONES] = {
 	 "Movable",
 };
 
-int min_free_kbytes = 5752;
-int wmark_min_kbytes = 5752;
-int wmark_low_kbytes = 7190;
-int wmark_high_kbytes = 8628;
+int min_free_kbytes = 2839;
+int wmark_min_kbytes = 2839;
+int wmark_low_kbytes = 3548;
+int wmark_high_kbytes = 4258;
 int min_free_order_shift = 1;
 
 static unsigned long __meminitdata nr_kernel_pages;
