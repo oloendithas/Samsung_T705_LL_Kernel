@@ -374,6 +374,7 @@ KBUILD_CPPFLAGS := -D__KERNEL__
 KBUILD_CFLAGS   := -Wall -Werror -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
+		   -Wno-deprecated-declarations \
 		   -Wno-format-security -Wno-unused \
 		   -Wno-array-bounds \
 		   -fno-delete-null-pointer-checks \
@@ -568,7 +569,7 @@ endif # $(dot-config)
 all: vmlinux
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
-KBUILD_CFLAGS	+= -Os -Wno-address $(call cc-disable-warning,maybe-uninitialized,deprecated-declarations,)
+KBUILD_CFLAGS	+= -Os
 else
 KBUILD_CFLAGS	+= -O2
 endif
