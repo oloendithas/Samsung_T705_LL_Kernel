@@ -375,6 +375,7 @@ KBUILD_CFLAGS   := -Wall -Werror -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-deprecated-declarations \
+	 	   -Wno-maybe-uninitialized \
 		   -Wno-format-security -Wno-unused \
 		   -Wno-array-bounds \
 		   -fno-delete-null-pointer-checks \
