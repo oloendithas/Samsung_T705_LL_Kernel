@@ -731,6 +731,7 @@ static void cpufreq_interactive_idle_start(void)
 		if (!pending)
 			cpufreq_interactive_timer_resched(pcpu);
 	}
+
 exit:
 	up_read(&pcpu->enable_sem);
 }
@@ -756,7 +757,6 @@ static void cpufreq_interactive_idle_end(void)
 		cpufreq_interactive_timer(smp_processor_id());
 	}
 
-exit:
 	up_read(&pcpu->enable_sem);
 }
 
