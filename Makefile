@@ -355,9 +355,9 @@ KERNEL_FLAGS	= -munaligned-access -mfpu=neon-vfpv4 \
 		  -fmodulo-sched -ffast-math \
 		  -funsafe-math-optimizations
 CFLAGS_MODULE   = -DMODULE $(KERNEL_FLAGS)
-AFLAGS_MODULE   =
+AFLAGS_MODULE   = -DMODULE $(KERNEL_FLAGS)
 LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
+CFLAGS_KERNEL	= $(KERNEL_FLAGS)
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -376,7 +376,8 @@ KBUILD_CFLAGS   := -Wall -Werror -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security -Wno-unused \
 		   -Wno-array-bounds \
-		   -fno-delete-null-pointer-checks
+		   -fno-delete-null-pointer-checks \
+		   $(KERNEL_FLAGS)
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
