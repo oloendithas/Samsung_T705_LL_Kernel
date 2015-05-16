@@ -24,14 +24,13 @@
 #include "mdnie_lite_table_kl.h"
 #elif defined(CONFIG_LCD_MIPI_S6TNMR7)
 #include "mdnie_lite_table_ch.h"
-
 #endif
 
 #if defined(CONFIG_TDMB)
 #include "mdnie_lite_table_dmb.h"
 #endif
 
-#define MDNIE_SYSFS_PREFIX		"/sdcard/mdnie/"
+#define MDNIE_SYSFS_PREFIX		"/data/mdnie/"
 #define PANEL_COORDINATE_PATH	"/sys/class/lcd/panel/color_coordinate"
 
 #define IS_DMB(idx)			(idx == DMB_NORMAL_MODE)
@@ -46,6 +45,15 @@
 #define GET_LSB_8BIT(x)		((x >> 0) & (BIT(8) - 1))
 
 static struct class *mdnie_class;
+static unsigned int tuning_enabled = 0;
+
+void set_tuning_enabled(unsigned int value) {
+	tuning_enabled = value;
+}
+
+unsigned int get_tuning_enabled(void) {
+	return tuning_enabled;
+}
 
 #ifdef ASCR_BIT_SHIFT
 static void inline store_ascr(struct mdnie_table *table, int pos, mdnie_t data)
@@ -88,8 +96,10 @@ static int mdnie_write(struct mdnie_info *mdnie, struct mdnie_table *table)
 	struct mdnie_device *md = to_mdnie_device(mdnie->dev);
 	int i, ret = 0;
 
-	if (!mdnie->enable || !md->ops->write)
+	if (!mdnie->enable || !md->ops->write) {
+		dev_err(mdnie->dev, "%s: error: %d", __func__, EIO);
 		return -EIO;
+	}
 
 #ifdef MDNIE_USE_SET_ADDR
 	ret = md->ops->set_addr(md->dev.parent, MDNIE_SEQUENCE_OFFSET_1);
@@ -100,14 +110,14 @@ static int mdnie_write(struct mdnie_info *mdnie, struct mdnie_table *table)
 							table->tune[MDNIE_CMD2].size);
 #else
 	for (i = 0; i < ARRAY_SIZE(table->tune); i++) {
-			ret = md->ops->write(md->dev.parent, table->tune[i].sequence, table->tune[i].size);
+		ret = md->ops->write(md->dev.parent, table->tune[i].sequence, table->tune[i].size);
 	}
 #endif
 
 	return ret;
 }
 
-static int mdnie_write_table(struct mdnie_info *mdnie, struct mdnie_table *table)
+int mdnie_write_table(struct mdnie_info *mdnie, struct mdnie_table *table)
 {
 	int i, ret = 0;
 	struct mdnie_table *buf = NULL;
@@ -130,7 +140,7 @@ static int mdnie_write_table(struct mdnie_info *mdnie, struct mdnie_table *table
 	return ret;
 }
 
-static struct mdnie_table *mdnie_find_table(struct mdnie_info *mdnie)
+struct mdnie_table *mdnie_find_table(struct mdnie_info *mdnie)
 {
 	struct mdnie_table *table = NULL;
 
@@ -169,10 +179,19 @@ static void mdnie_update_sequence(struct mdnie_info *mdnie, struct mdnie_table *
 
 	if (mdnie->tuning) {
 		t = mdnie_request_table(mdnie->path, table);
+		save_tuning_table(t);
 		if (!IS_ERR_OR_NULL(t) && !IS_ERR_OR_NULL(t->name))
 			mdnie_write_table(mdnie, t);
 		else
 			mdnie_write_table(mdnie, table);
+			
+		if (mdnie->is_fb_notif_cb == true) {
+			mutex_lock(&mdnie->lock);
+			mdnie->is_fb_notif_cb = false;
+			mutex_unlock(&mdnie->lock);
+		} else {
+			mdnie_update_brightness(to_mdnie_device(mdnie->dev), 0);
+		}
 	} else
 		mdnie_write_table(mdnie, table);
 	return;
@@ -190,7 +209,7 @@ static void mdnie_update(struct mdnie_info *mdnie)
 	table = mdnie_find_table(mdnie);
 	if (!IS_ERR_OR_NULL(table) && !IS_ERR_OR_NULL(table->name)) {
 		mdnie_update_sequence(mdnie, table);
-		dev_info(mdnie->dev, "%s\n", table->name);
+		dev_dbg(mdnie->dev, "%s\n", table->name);
 
 		mdnie->white_r = read_ascr(table, MDNIE_WHITE_R);
 		mdnie->white_g = read_ascr(table, MDNIE_WHITE_G);
@@ -206,7 +225,7 @@ static void update_color_position(struct mdnie_info *mdnie, unsigned int idx)
 	struct mdnie_table *table = NULL;
 	mdnie_t *wbuf;
 
-	dev_info(mdnie->dev, "%s: idx=%d\n", __func__, idx);
+	dev_dbg(mdnie->dev, "%s: idx=%d\n", __func__, idx);
 
 	mutex_lock(&mdnie->lock);
 
@@ -237,14 +256,14 @@ static int get_panel_coordinate(struct mdnie_info *mdnie, int *result)
 
 	ret = mdnie_open_file(PANEL_COORDINATE_PATH, &fp);
 	if (IS_ERR_OR_NULL(fp) || ret <= 0) {
-		dev_info(mdnie->dev, "%s: open skip: %s, %d\n", __func__, PANEL_COORDINATE_PATH, ret);
+		dev_err(mdnie->dev, "%s: open skip: %s, %d\n", __func__, PANEL_COORDINATE_PATH, ret);
 		ret = -EINVAL;
 		goto skip_color_correction;
 	}
 
 	ret = sscanf(fp, "%hu, %hu", &x, &y);
 	if ((ret != 2) || (!x && !y)) {
-		dev_info(mdnie->dev, "%s: %d, %d\n", __func__, x, y);
+		dev_err(mdnie->dev, "%s: %d, %d\n", __func__, x, y);
 		ret = -EINVAL;
 		goto skip_color_correction;
 	}
@@ -255,7 +274,7 @@ static int get_panel_coordinate(struct mdnie_info *mdnie, int *result)
 	result[4] = COLOR_OFFSET_F4(x, y);
 
 	ret = mdnie_calibration(result);
-	dev_info(mdnie->dev, "%s: %d, %d, idx=%d\n", __func__, x, y, ret);
+	dev_dbg(mdnie->dev, "%s: %d, %d, idx=%d\n", __func__, x, y, ret);
 
 skip_color_correction:
 	mdnie->color_correction = 1;
@@ -285,7 +304,7 @@ static ssize_t mode_store(struct device *dev,
 	if (ret < 0)
 		return ret;
 
-	dev_info(dev, "%s: value=%d\n", __func__, value);
+	dev_dbg(dev, "%s: value=%d\n", __func__, value);
 
 	if (value >= MODE_MAX) {
 		value = STANDARD;
@@ -327,7 +346,7 @@ static ssize_t scenario_store(struct device *dev,
 	if (ret < 0)
 		return ret;
 
-	dev_info(dev, "%s: value=%d\n", __func__, value);
+	dev_dbg(dev, "%s: value=%d\n", __func__, value);
 
 	if (!SCENARIO_IS_VALID(value))
 		value = UI_MODE;
@@ -391,6 +410,13 @@ static ssize_t tuning_store(struct device *dev,
 			return ret;
 		if (!mdnie->tuning)
 			memset(mdnie->path, 0, sizeof(mdnie->path));
+			
+		//if (sysfs_streq(buf, "1"))
+		set_tuning_enabled(1);
+
+		if (sysfs_streq(buf, "0")) {
+			set_tuning_enabled(0);
+		}
 
 		dev_info(dev, "%s: %s\n", __func__, mdnie->tuning ? "enable" : "disable");
 	} else {
@@ -406,9 +432,93 @@ static ssize_t tuning_store(struct device *dev,
 		snprintf(mdnie->path, sizeof(MDNIE_SYSFS_PREFIX) + count-1, "%s%s", MDNIE_SYSFS_PREFIX, buf);
 		dev_info(dev, "%s: %s\n", __func__, mdnie->path);
 
+		set_tuning_enabled(1);
 		mdnie_update(mdnie);
 	}
 
+	return count;
+}
+
+static ssize_t tuning_correction_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct mdnie_info *mdnie = dev_get_drvdata(dev);
+	char *pos = buf;
+	struct mdnie_table *table = NULL;
+	int i;
+
+	if (!mdnie->tuning) {
+		pos += sprintf(pos, "tunning mode is off\n");
+		goto exit;
+	}
+
+	//if (strncmp(mdnie->path, MDNIE_SYSFS_PREFIX, sizeof(MDNIE_SYSFS_PREFIX) - 1)) {
+	//	pos += sprintf(pos, "file path is invalid, %s\n", mdnie->path);
+	//	goto exit;
+	//}
+
+	table = get_correction_table();
+	if (!IS_ERR_OR_NULL(table) && !IS_ERR_OR_NULL(table->name)) {
+		if (table == NULL){
+			pos += sprintf(pos, "file path is invalid, %s\n", mdnie->path);
+			goto exit;
+		}
+			
+		for (i = 0; i < table->tune[MDNIE_CMD1].size; i++)
+			pos += sprintf(pos, "0x%02x ", table->tune[MDNIE_CMD1].sequence[i]);
+		pos += sprintf(pos, "\n");
+		if (MDNIE_CMD1 != MDNIE_CMD2) {
+			for (i = 0; i < table->tune[MDNIE_CMD2].size; i++)
+				pos += sprintf(pos, "0x%02x ", table->tune[MDNIE_CMD2].sequence[i]);
+		}
+	} else {
+		pos += sprintf(pos, "correction is empty");
+	}
+
+exit:
+	pos += sprintf(pos, "-- %s\n", __func__);
+
+	return pos - buf;
+}
+
+static ssize_t tuning_correction_store(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct mdnie_info *mdnie = dev_get_drvdata(dev);
+	struct mdnie_table *table = NULL;
+	char path[50];
+	int i, j;
+
+	snprintf(path, sizeof(MDNIE_SYSFS_PREFIX) + count-1, "%s%s", MDNIE_SYSFS_PREFIX, buf);
+	dev_dbg(dev, "%s: path=%s", __func__, path);
+
+	table = mdnie_find_table(mdnie);
+	if (IS_ERR_OR_NULL(table)) {
+		dev_err(dev, "%s: mdnie table is NULL\n", __func__);
+		goto exit;
+	}
+	
+	table = mdnie_request_table(path, table);
+	if (IS_ERR_OR_NULL(table)) {
+		dev_err(dev, "%s: table %s is NULL\n", __func__, path);
+		goto exit;
+	}
+	
+	for (j = MDNIE_CMD1; j <= MDNIE_CMD2; j++) {
+		for (i = 1; i < table->tune[j].size; i++) {
+			if (table->tune[j].sequence[i] != 0)
+				goto has_corr;
+		}
+	}
+	dev_err(dev, "correction_table is empty\n");
+	save_correction_table(NULL);
+	return count;
+	
+has_corr:
+	save_correction_table(table);
+	mdnie_update_brightness(to_mdnie_device(dev), 0);
+
+exit:	
 	return count;
 }
 
@@ -685,6 +795,7 @@ static struct device_attribute mdnie_attributes[] = {
 	__ATTR(mode, 0664, mode_show, mode_store),
 	__ATTR(scenario, 0664, scenario_show, scenario_store),
 	__ATTR(tuning, 0664, tuning_show, tuning_store),
+	__ATTR(tuning_correction, 0664, tuning_correction_show, tuning_correction_store),
 	__ATTR(accessibility, 0664, accessibility_show, accessibility_store),
 	__ATTR(color_correct, 0444, color_correct_show, NULL),
 	__ATTR(bypass, 0664, bypass_show, bypass_store),
@@ -722,6 +833,7 @@ static int fb_notifier_callback(struct notifier_block *self,
 	if (fb_blank == FB_BLANK_UNBLANK) {
 		mutex_lock(&mdnie->lock);
 		mdnie->enable = 1;
+		mdnie->is_fb_notif_cb = true;
 		mutex_unlock(&mdnie->lock);
 
 		mdnie_update(mdnie);

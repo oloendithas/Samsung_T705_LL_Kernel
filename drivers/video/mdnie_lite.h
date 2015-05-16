@@ -119,11 +119,21 @@ struct mdnie_info {
 	unsigned int white_b;
 	struct mdnie_table table_buffer;
 	mdnie_t sequence_buffer[256];
+	bool is_fb_notif_cb;
 };
 
+extern void set_tuning_enabled(unsigned int value);
+extern unsigned int get_tuning_enabled(void);
 extern int mdnie_calibration(int *r);
 extern int mdnie_open_file(const char *path, char **fp);
 extern int mdnie_register(struct device *p, void *data, mdnie_w w, mdnie_r r);
 extern struct mdnie_table *mdnie_request_table(char *path, struct mdnie_table *s);
+extern void mdnie_update_brightness(struct mdnie_device *md_dev, int brightness);
+extern struct mdnie_table *mdnie_find_table(struct mdnie_info *mdnie);
+extern int mdnie_write_table(struct mdnie_info *mdnie, struct mdnie_table *table);
+extern void save_tuning_table(struct mdnie_table *table);
+extern struct mdnie_table *get_tuning_table(void);
+extern void save_correction_table(struct mdnie_table *table);
+extern struct mdnie_table *get_correction_table(void);
 
 #endif /* __MDNIE_H__ */
