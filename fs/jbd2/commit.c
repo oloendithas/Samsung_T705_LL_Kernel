@@ -338,6 +338,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
 	unsigned long first_block;
 	tid_t first_tid;
 	int update_tail;
+	int to_free;
 	LIST_HEAD(io_bufs);
 	LIST_HEAD(log_bufs);
 
