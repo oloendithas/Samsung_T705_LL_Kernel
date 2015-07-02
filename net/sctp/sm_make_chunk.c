@@ -2475,7 +2475,10 @@ static int sctp_process_param(struct sctp_association *asoc,
 		if (ipv6_only_sock(asoc->base.sk))
 			break;
 do_addr_param:
-		af = sctp_get_af_specific(param_type2af(param.p->type));
+		af = sctp_get_af_specific(param_type2af(addr_param->p.type));
+		if (af == NULL)
+			break;
+
 		af->from_addr_param(&addr, param.addr, htons(asoc->peer.port), 0);
 		scope = sctp_scope(peer_addr);
 		if (sctp_in_scope(&addr, scope))
