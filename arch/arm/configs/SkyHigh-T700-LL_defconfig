@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 3.4.81 Kernel Configuration
+# Linux/arm 3.4.108 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_HAVE_PWM=y
@@ -772,8 +772,7 @@ CONFIG_KERNEL_MODE_NEON=y
 CONFIG_BINFMT_ELF=y
 CONFIG_ARCH_BINFMT_ELF_RANDOMIZE_PIE=y
 # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-CONFIG_HAVE_AOUT=y
-# CONFIG_BINFMT_AOUT is not set
+# CONFIG_HAVE_AOUT is not set
 CONFIG_BINFMT_MISC=y
 
 #
