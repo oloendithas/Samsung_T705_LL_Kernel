@@ -62,7 +62,7 @@ config EXPERIMENTAL
 
 config ZEN_INTERACTIVE
 	bool "Tune kernel for interactivity"
-	default y
+	default n
 	help
 	  Tunes the kernel for responsiveness at the cost of throughput and power usage.
 
