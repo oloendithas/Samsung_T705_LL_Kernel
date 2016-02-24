@@ -48,7 +48,7 @@
 #define MAX_SAMPLING_DOWN_FACTOR		(100000)
 #define MICRO_FREQUENCY_DOWN_DIFFERENTIAL	(3)
 #define MICRO_FREQUENCY_UP_THRESHOLD		(90)
-#define MICRO_FREQUENCY_MIN_SAMPLE_RATE		(80000)
+#define MICRO_FREQUENCY_MIN_SAMPLE_RATE		(20000)
 #define MIN_FREQUENCY_UP_THRESHOLD		(10)
 #define MAX_FREQUENCY_UP_THRESHOLD		(100)
 #define MAX_FREQ_BLANK				B_MAX_FREQ
@@ -174,7 +174,7 @@ static struct dbs_tuners {
 	.boost_mode = false,
 };
 
-#define UP_THRESHOLD_FB_BLANK		(90)
+#define UP_THRESHOLD_FB_BLANK		(99)
 
 static int fb_state_change(struct notifier_block *nb,
 		unsigned long val, void *data)
