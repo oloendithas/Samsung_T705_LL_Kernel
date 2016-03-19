@@ -208,9 +208,11 @@ static int cpu_pm_suspend(void)
 {
 	int ret;
 
+#ifdef CONFIG_EXYNOS54XX_DEBUG
 #ifdef CONFIG_SEC_PM
 	if (FLAG_T32_EN)
 		goto out;
+#endif
 #endif
 
 	ret = cpu_pm_enter();
