@@ -305,11 +305,11 @@ static int gov_table[10][10] = {
 	{ 100, 67, 30 },
 	{ 100, 90, 70, 40 },
 	{ 100, 90, 70, 50, 30 },
-	{ 100, 90, 80, 70, 50, 30 },
-	{ 100, 90, 80, 70, 60, 45, 30 },
-	{ 100, 90, 85, 75, 65, 45, 30, 10 },
-	{ 100, 90, 80, 70, 60, 45, 30, 10, 10 },
-	{ 100, 90, 80, 70, 60, 50, 40, 30, 10, 10 },
+	{ 100, 75, 50, 30, 20, 20 },
+	{ 100, 90, 70, 50, 30, 20, 20 },
+	{ 100, 90, 80, 70, 60, 45, 30, 20 },
+	{ 100, 90, 80, 70, 60, 50, 30, 30, 20 },
+	{ 100, 90, 80, 70, 60, 50, 40, 30, 30, 20 },
 };
 
 void hlpr_set_min_max_G3D(unsigned int min, unsigned int max)
@@ -339,7 +339,7 @@ static int mali_dvfs_update_asv(int cmd)
 	if (cmd == ASV_CMD_DISABLE) {
 		for (i = 0; i < MALI_DVFS_STEP; i++) {
 #ifdef CONFIG_SUPPORT_WQXGA
-			mali_dvfs_infotbl[i].voltage = mali_dvfs_vol_default[i+1];
+			mali_dvfs_infotbl[i].voltage = mali_dvfs_vol_default[i+1 < MALI_DVFS_STEP ? i+1 : i];
 #else
 			mali_dvfs_infotbl[i].voltage = mali_dvfs_vol_default[i];
 #endif  /* CONFIG_SUPPORT_WQXGA */
