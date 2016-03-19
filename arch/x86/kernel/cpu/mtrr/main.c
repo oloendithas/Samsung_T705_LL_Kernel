@@ -31,7 +31,7 @@
     System Programming Guide; Section 9.11. (1997 edition - PPro).
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/types.h> /* FIXME: kvm_para.h needs this */
 

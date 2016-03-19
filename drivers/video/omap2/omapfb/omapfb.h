@@ -24,7 +24,7 @@
 #define __DRIVERS_VIDEO_OMAP2_OMAPFB_H__
 
 #ifdef CONFIG_FB_OMAP2_DEBUG_SUPPORT
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/rwsem.h>

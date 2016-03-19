@@ -29,7 +29,7 @@
  * switched to Mouse Mode (which utilizes only the center 1/3 of the touchpad).
  */
 
-#define DEBUG
+//#define DEBUG
 #include <linux/slab.h>
 #include <linux/input.h>
 #include <linux/module.h>

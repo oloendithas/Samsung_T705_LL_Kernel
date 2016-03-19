@@ -61,7 +61,7 @@
 #include "c2p.h"
 
 
-#define DEBUG
+//#define DEBUG
 
 #if !defined(CONFIG_FB_AMIGA_OCS) && !defined(CONFIG_FB_AMIGA_ECS) && !defined(CONFIG_FB_AMIGA_AGA)
 #define CONFIG_FB_AMIGA_OCS   /* define at least one fb driver, this will change later */

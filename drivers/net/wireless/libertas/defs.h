@@ -8,7 +8,7 @@
 #include <linux/spinlock.h>
 
 #ifdef CONFIG_LIBERTAS_DEBUG
-#define DEBUG
+//#define DEBUG
 #define PROC_DEBUG
 #endif
 

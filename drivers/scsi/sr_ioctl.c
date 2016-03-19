@@ -23,7 +23,7 @@
 #include "sr.h"
 
 #if 0
-#define DEBUG
+//#define DEBUG
 #endif
 
 /* The sr_is_xa() seems to trigger firmware bugs with some drives :-(

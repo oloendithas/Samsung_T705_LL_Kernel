@@ -296,7 +296,7 @@ static void exynos_report_trigger(void)
 			break;
 	}
 
-	pr_info("[TMU-IRQ] IRQ mode=%d\n",i);
+	//pr_info("[TMU-IRQ] IRQ mode=%d\n",i);
 	if (th_zone->mode == THERMAL_DEVICE_ENABLED) {
 		if (i > 0)
 			th_zone->therm_dev->polling_delay = ACTIVE_INTERVAL;
@@ -737,7 +737,7 @@ void exynos_tmu_call_notifier(enum tmu_noti_state_t cur_state)
 		else
 			blocking_notifier_call_chain(&exynos_tmu_notifier, cur_state, &tmu_old_state);
 
-		pr_info("tmu temperature state %d to %d \n", tmu_old_state, cur_state);
+		//pr_info("tmu temperature state %d to %d \n", tmu_old_state, cur_state);
 		tmu_old_state = cur_state;
 	}
 }
@@ -754,7 +754,7 @@ void exynos_gpu_call_notifier(enum gpu_noti_state_t cur_state)
 	}
 
 	if (cur_state!=gpu_old_state) {
-		pr_info("gpu temperature state %d to %d \n", gpu_old_state, cur_state);
+		//pr_info("gpu temperature state %d to %d \n", gpu_old_state, cur_state);
 		blocking_notifier_call_chain(&exynos_gpu_notifier, cur_state, &cur_state);
 		gpu_old_state = cur_state;
 	}
@@ -1130,7 +1130,7 @@ static void exynos_check_mif_noti_state(int temp)
 		cur_state = MEM_TH_LV3;
 
 	if (cur_state != mif_old_state) {
-		pr_info("tmu temperature mif state %d to %d \n", mif_old_state, cur_state);
+		//pr_info("tmu temperature mif state %d to %d \n", mif_old_state, cur_state);
 #if 1 /* ONLY IF the normal and hot mem temp is same, skip duplicate setting */
 		if ((cur_state == MEM_TH_LV3) ||
 			((cur_state == MEM_TH_LV2) && (mif_old_state == MEM_TH_LV3)) ||

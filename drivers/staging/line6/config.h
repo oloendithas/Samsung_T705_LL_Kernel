@@ -14,7 +14,7 @@
 
 
 #ifdef CONFIG_USB_DEBUG
-#define DEBUG 1
+//#define DEBUG 1
 #endif
 
 

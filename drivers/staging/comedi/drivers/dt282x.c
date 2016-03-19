@@ -65,7 +65,7 @@ Notes:
 #include <asm/dma.h>
 #include "comedi_fc.h"
 
-#define DEBUG
+//#define DEBUG
 
 #define DT2821_TIMEOUT		100	/* 500 us */
 #define DT2821_SIZE 0x10

@@ -63,7 +63,7 @@
  */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-#define DEBUG
+//#define DEBUG
 
 #include <linux/kernel.h>
 #include <linux/string.h>

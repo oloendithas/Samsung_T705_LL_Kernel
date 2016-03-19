@@ -25,7 +25,7 @@
 
 #include "../scsi.h"
 
-#define DEBUG
+//#define DEBUG
 
 typedef struct queue_entry {
 	struct list_head   list;

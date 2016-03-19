@@ -11,7 +11,7 @@
  */
 
 #ifdef CONFIG_CMA_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/kernel.h>

@@ -21,7 +21,7 @@
  */
 
 /*
-#define DEBUG
+//#define DEBUG
 #define VERBOSE_DEBUG
 */
 #include <linux/delay.h>

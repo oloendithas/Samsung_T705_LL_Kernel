@@ -657,7 +657,7 @@ static ssize_t max77803_muic_show_usb_state(struct device *dev,
 					    char *buf)
 {
 	struct max77803_muic_info *info = dev_get_drvdata(dev);
-	dev_info(info->dev, "func:%s info->cable_type:%d\n",
+	dev_dbg(info->dev, "func:%s info->cable_type:%d\n",
 		 __func__, info->cable_type);
 	switch (info->cable_type) {
 	case CABLE_TYPE_USB_MUIC:

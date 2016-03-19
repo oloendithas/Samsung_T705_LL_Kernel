@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-#define DEBUG
+//#define DEBUG
 
 #include <linux/battery/sec_charger.h>
 static int smb347_i2c_write(struct i2c_client *client,

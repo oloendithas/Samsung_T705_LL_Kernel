@@ -51,7 +51,7 @@
  * superseded by nicer dbg_xxx() macros...
  */
 #if CONFIG_JFFS2_FS_DEBUG > 0
-#define DEBUG
+//#define DEBUG
 #define D1(x) x
 #else
 #define D1(x)

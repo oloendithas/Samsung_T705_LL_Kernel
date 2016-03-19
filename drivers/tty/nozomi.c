@@ -39,7 +39,7 @@
  */
 
 /* Enable this to have a lot of debug printouts */
-#define DEBUG
+//#define DEBUG
 
 #include <linux/kernel.h>
 #include <linux/module.h>

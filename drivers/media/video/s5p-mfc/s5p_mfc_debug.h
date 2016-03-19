@@ -15,7 +15,7 @@
 #ifndef S5P_MFC_DEBUG_H_
 #define S5P_MFC_DEBUG_H_
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 extern int debug;

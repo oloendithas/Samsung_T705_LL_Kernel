@@ -83,7 +83,7 @@ module_param_named(nopnp, i8042_nopnp, bool, 0);
 MODULE_PARM_DESC(nopnp, "Do not use PNP to detect controller settings");
 #endif
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 static bool i8042_debug;
 module_param_named(debug, i8042_debug, bool, 0600);

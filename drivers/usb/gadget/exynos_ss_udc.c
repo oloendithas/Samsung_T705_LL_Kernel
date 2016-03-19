@@ -11,7 +11,7 @@
  */
 
 #ifdef CONFIG_SEC_FACTORY
-#define DEBUG
+//#define DEBUG
 #endif
 /* #define DEBUG */
 /* #define VERBOSE_DEBUG */

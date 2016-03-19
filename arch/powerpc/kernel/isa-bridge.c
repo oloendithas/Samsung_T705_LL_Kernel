@@ -13,7 +13,7 @@
  *      2 of the License, or (at your option) any later version.
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/kernel.h>
 #include <linux/pci.h>

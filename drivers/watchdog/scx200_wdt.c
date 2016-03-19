@@ -32,7 +32,7 @@
 #include <linux/uaccess.h>
 #include <linux/io.h>
 
-#define DEBUG
+//#define DEBUG
 
 MODULE_AUTHOR("Christer Weinigel <wingel@nano-system.com>");
 MODULE_DESCRIPTION("NatSemi SCx200 Watchdog Driver");

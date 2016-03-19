@@ -22,7 +22,7 @@
 
 #define VERSION "0.2"
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define DBG(args...)	printk(args)

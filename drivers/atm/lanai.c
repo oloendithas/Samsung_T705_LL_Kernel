@@ -79,7 +79,7 @@
 /*
  * Enable extra debugging
  */
-#define DEBUG
+//#define DEBUG
 /*
  * Debug _all_ register operations with card, except the memory test.
  * Also disables the timed poll to prevent extra chattiness.  This

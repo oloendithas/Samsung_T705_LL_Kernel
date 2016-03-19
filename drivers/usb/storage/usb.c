@@ -46,7 +46,7 @@
  */
 
 #ifdef CONFIG_USB_STORAGE_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/sched.h>

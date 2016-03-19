@@ -24,7 +24,7 @@
 #define __OMAP2_DSS_H
 
 #ifdef CONFIG_OMAP2_DSS_DEBUG_SUPPORT
-#define DEBUG
+//#define DEBUG
 #endif
 
 #ifdef DEBUG

@@ -56,7 +56,7 @@
 
 #ifdef MATROXFB_DEBUG
 
-#define DEBUG
+//#define DEBUG
 #define DBG(x)		printk(KERN_DEBUG "matroxfb: %s\n", (x));
 
 #ifdef MATROXFB_DEBUG_HEAVY

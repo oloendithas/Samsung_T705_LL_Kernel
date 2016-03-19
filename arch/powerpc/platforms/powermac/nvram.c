@@ -29,7 +29,7 @@
 
 #include "pmac.h"
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define DBG(x...) printk(x)

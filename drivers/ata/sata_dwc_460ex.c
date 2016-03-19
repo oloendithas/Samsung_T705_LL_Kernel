@@ -19,7 +19,7 @@
  */
 
 #ifdef CONFIG_SATA_DWC_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #ifdef CONFIG_SATA_DWC_VDEBUG

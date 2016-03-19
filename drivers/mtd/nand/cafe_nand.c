@@ -8,7 +8,7 @@
  * Copyright © 2006 David Woodhouse <dwmw2@infradead.org>
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/device.h>
 #undef DEBUG

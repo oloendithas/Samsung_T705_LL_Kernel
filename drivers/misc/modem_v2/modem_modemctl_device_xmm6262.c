@@ -14,7 +14,7 @@
  *
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/init.h>
 #include <linux/irq.h>

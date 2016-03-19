@@ -100,7 +100,7 @@ MODULE_LICENSE("Dual BSD/GPL");
 
 #define BSD_CURRENT_VERSION	1
 
-#define DEBUG 1
+//#define DEBUG 1
 
 /*
  * A dictionary for doing BSD compress.

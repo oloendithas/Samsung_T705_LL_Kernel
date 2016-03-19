@@ -10,7 +10,7 @@
  */
 	.section	.text
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/linkage.h>
 #include <asm/cpu-regs.h>

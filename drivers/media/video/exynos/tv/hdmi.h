@@ -15,7 +15,7 @@
 #define SAMSUNG_HDMI_H
 
 #ifdef CONFIG_VIDEO_EXYNOS_HDMI_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/io.h>

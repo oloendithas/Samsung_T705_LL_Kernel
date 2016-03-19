@@ -9,7 +9,7 @@
  */
 
 #ifdef CONFIG_EXYNOS_IOMMU_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/kernel.h>

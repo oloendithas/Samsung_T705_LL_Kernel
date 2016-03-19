@@ -10,7 +10,7 @@
 	.global _stext
 	.global _edata
 
-#define DEBUG
+//#define DEBUG
 #define ROM_OFFSET 0x10C00000
 #define STACK_GAURD 0x10
 

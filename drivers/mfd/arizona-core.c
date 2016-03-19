@@ -9,7 +9,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-#define DEBUG
+//#define DEBUG
 #include <linux/delay.h>
 #include <linux/err.h>
 #include <linux/gpio.h>
@@ -125,14 +125,14 @@ static irqreturn_t arizona_underclocked(int irq, void *data)
 		dev_err(arizona->dev, "ISRC1 underclocked\n");
 	if (val & ARIZONA_FX_UNDERCLOCKED_STS)
 		dev_err(arizona->dev, "FX underclocked\n");
-	if (val & ARIZONA_ASRC_UNDERCLOCKED_STS)
-		dev_err(arizona->dev, "ASRC underclocked\n");
+//	if (val & ARIZONA_ASRC_UNDERCLOCKED_STS)
+//		dev_err(arizona->dev, "ASRC underclocked\n");
 	if (val & ARIZONA_DAC_UNDERCLOCKED_STS)
 		dev_err(arizona->dev, "DAC underclocked\n");
 	if (val & ARIZONA_ADC_UNDERCLOCKED_STS)
 		dev_err(arizona->dev, "ADC underclocked\n");
-	if (val & ARIZONA_MIXER_UNDERCLOCKED_STS)
-		dev_err(arizona->dev, "Mixer dropped sample\n");
+//	if (val & ARIZONA_MIXER_UNDERCLOCKED_STS)
+//		dev_err(arizona->dev, "Mixer dropped sample\n");
 
 	return IRQ_HANDLED;
 }

@@ -15,7 +15,7 @@
 #include <linux/fb.h>
 #include <asm/types.h>
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define DPRINTK(fmt, args...) printk(KERN_DEBUG "%s: " fmt,__func__,## args)

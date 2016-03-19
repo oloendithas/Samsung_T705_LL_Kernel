@@ -22,7 +22,7 @@
 
 #define pr_fmt(fmt) "mmiotrace: " fmt
 
-#define DEBUG 1
+//#define DEBUG 1
 
 #include <linux/module.h>
 #include <linux/debugfs.h>

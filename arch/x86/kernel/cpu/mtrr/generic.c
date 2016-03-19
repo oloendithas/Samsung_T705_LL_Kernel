@@ -2,7 +2,7 @@
  * This only handles 32bit MTRR on 32bit hosts. This is strictly wrong
  * because MTRRs can span up to 40 bits (36bits on most modern x86)
  */
-#define DEBUG
+//#define DEBUG
 
 #include <linux/module.h>
 #include <linux/init.h>

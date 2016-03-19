@@ -54,7 +54,7 @@ static int debug;
 
 #undef dbg
 #ifndef DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 #define dbg(format, ...)				\
 do {							\

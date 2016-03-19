@@ -11,7 +11,7 @@
  */
 
 #ifdef CONFIG_ZRAM_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/module.h>

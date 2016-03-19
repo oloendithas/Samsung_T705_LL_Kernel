@@ -50,7 +50,7 @@
 #include "sr.h"
 
 #if 0
-#define DEBUG
+//#define DEBUG
 #endif
 
 /* here are some constants to sort the vendors into groups */

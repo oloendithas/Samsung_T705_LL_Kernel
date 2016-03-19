@@ -51,7 +51,7 @@
  */
 
 /* un-comment DEBUG to enable pr_debug() statements */
-#define DEBUG
+//#define DEBUG
 
 #include <linux/kernel.h>
 #include <linux/cpuidle.h>

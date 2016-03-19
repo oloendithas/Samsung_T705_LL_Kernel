@@ -38,7 +38,7 @@ module_param(m5mols_debug, int, 0644);
 
 #define MOD_NAME		"M5MOLS"
 #define M5MOLS_I2C_CHECK_RETRY 50
-#define DEBUG
+//#define DEBUG
 #define DEFAULT_SENSOR_WIDTH	800
 #define DEFAULT_SENSOR_HEIGHT	480
 

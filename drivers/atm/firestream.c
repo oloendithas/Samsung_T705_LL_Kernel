@@ -287,7 +287,7 @@ static struct reginit_item PHY_NTC_INIT[] __devinitdata = {
    instruct people with problems to enable debugging without requiring
    them to recompile... -- REW
 */
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define fs_dprintk(f, str...) if (fs_debug & f) printk (str)

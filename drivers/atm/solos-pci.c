@@ -21,7 +21,7 @@
  * GNU General Public License for more details.
  */
 
-#define DEBUG
+//#define DEBUG
 #define VERBOSE_DEBUG
 
 #include <linux/interrupt.h>

@@ -13,7 +13,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-#define DEBUG
+//#define DEBUG
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/i2c.h>

@@ -24,7 +24,7 @@
 
 #include "ge_pic.h"
 
-#define DEBUG
+//#define DEBUG
 #undef DEBUG
 
 #ifdef DEBUG

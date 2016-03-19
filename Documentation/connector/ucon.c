@@ -41,7 +41,7 @@
 
 #include <linux/connector.h>
 
-#define DEBUG
+//#define DEBUG
 #define NETLINK_CONNECTOR 	11
 
 /* Hopefully your userspace connector.h matches this kernel */

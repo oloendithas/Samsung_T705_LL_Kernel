@@ -22,7 +22,7 @@
 */
 
 #ifdef CONFIG_MTD_NAND_S3C2410_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/module.h>

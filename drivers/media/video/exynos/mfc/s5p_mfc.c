@@ -10,7 +10,7 @@
  * (at your option) any later version.
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include <linux/io.h>
 #include <linux/sched.h>

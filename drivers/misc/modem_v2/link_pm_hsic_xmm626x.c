@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  */
-#define DEBUG
+//#define DEBUG
 
 #include <linux/gpio.h>
 #include <linux/miscdevice.h>

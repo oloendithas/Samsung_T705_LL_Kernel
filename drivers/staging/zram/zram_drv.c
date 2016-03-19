@@ -16,7 +16,7 @@
 #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
 
 #ifdef CONFIG_ZRAM_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/module.h>

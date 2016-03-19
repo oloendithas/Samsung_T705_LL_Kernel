@@ -14,7 +14,7 @@
 
 
 #ifdef CONFIG_S3C2410_DMA_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/module.h>

@@ -28,7 +28,7 @@
 /*
  * Debug macros
  */
-#define DEBUG
+//#define DEBUG
 
 int pm_do_suspend(void)
 {

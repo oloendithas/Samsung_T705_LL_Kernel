@@ -24,7 +24,7 @@
 #define	__SMSCUSBNET_H
 
 #ifndef DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 typedef unsigned char BOOLEAN;

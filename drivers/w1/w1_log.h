@@ -22,7 +22,7 @@
 #ifndef __W1_LOG_H
 #define __W1_LOG_H
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef W1_DEBUG
 #  define assert(expr) do {} while (0)

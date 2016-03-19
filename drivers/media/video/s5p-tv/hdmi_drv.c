@@ -12,7 +12,7 @@
  */
 
 #ifdef CONFIG_VIDEO_SAMSUNG_S5P_HDMI_DEBUG
-#define DEBUG
+//#define DEBUG
 #endif
 
 #include <linux/kernel.h>
