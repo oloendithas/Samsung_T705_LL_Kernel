@@ -1528,7 +1528,7 @@ static void sec_bat_do_fullcharged(
 	 * activated wake lock in a few seconds
 	 */
 	if (battery->pdata->polling_type == SEC_BATTERY_MONITOR_ALARM)
-		wake_lock_timeout(&battery->vbus_wake_lock, HZ * 10);
+		wake_lock_timeout(&battery->vbus_wake_lock, 300);
 }
 
 static bool sec_bat_fullcharged_check(
@@ -1966,7 +1966,7 @@ skip_updating_status:
 #endif
 
 	if (battery->capacity <= 0)
-		wake_lock_timeout(&battery->monitor_wake_lock, HZ * 5);
+		wake_lock_timeout(&battery->monitor_wake_lock, HZ * 1);
 	else
 		wake_unlock(&battery->monitor_wake_lock);
 
@@ -2017,7 +2017,7 @@ static void sec_bat_cable_work(struct work_struct *work)
 	 * if cable is connected and disconnected,
 	 * activated wake lock in a few seconds
 	 */
-	wake_lock_timeout(&battery->vbus_wake_lock, HZ * 5);
+	wake_lock_timeout(&battery->vbus_wake_lock, HZ * 1);
 
 	if (battery->cable_type == POWER_SUPPLY_TYPE_BATTERY ||
 		((battery->pdata->cable_check_type &
@@ -2090,7 +2090,7 @@ static void sec_bat_cable_work(struct work_struct *work)
 
 	wake_lock(&battery->monitor_wake_lock);
 	queue_delayed_work(battery->monitor_wqueue, &battery->monitor_work,
-					msecs_to_jiffies(500));
+					msecs_to_jiffies(200));
 end_of_cable_work:
 	wake_unlock(&battery->cable_wake_lock);
 
@@ -3550,7 +3550,7 @@ static void sec_battery_complete(struct device *dev)
 
 	wake_lock(&battery->monitor_wake_lock);
 	queue_delayed_work(battery->monitor_wqueue,
-		&battery->monitor_work, 500);
+		&battery->monitor_work, 50);
 
 	dev_dbg(battery->dev, "%s: End\n", __func__);
 
