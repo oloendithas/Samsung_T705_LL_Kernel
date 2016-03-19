@@ -10,7 +10,7 @@
  * published by the Free Software Foundation.
  */
 
-
+#include <linux/battery/sec_fuelgauge.h>
 #include <linux/battery/sec_battery.h>
 
 static struct device_attribute sec_battery_attrs[] = {
@@ -1106,24 +1106,30 @@ static bool sec_bat_check_fullcharged_condition(
 		full_check_type = battery->pdata->full_check_type_2nd;
 
 	switch (full_check_type) {	
-	case SEC_BATTERY_FULLCHARGED_CHGINT:
-		return false;
-	case SEC_BATTERY_FULLCHARGED_ADC:
-	case SEC_BATTERY_FULLCHARGED_FG_CURRENT:
-	case SEC_BATTERY_FULLCHARGED_TIME:
-	case SEC_BATTERY_FULLCHARGED_SOC:
-	case SEC_BATTERY_FULLCHARGED_CHGGPIO:
-	case SEC_BATTERY_FULLCHARGED_CHGPSY:
-		break;
+		case SEC_BATTERY_FULLCHARGED_CHGINT:
+			return false;
+		case SEC_BATTERY_FULLCHARGED_ADC:
+		case SEC_BATTERY_FULLCHARGED_FG_CURRENT:
+		case SEC_BATTERY_FULLCHARGED_TIME:
+		case SEC_BATTERY_FULLCHARGED_SOC:
+		case SEC_BATTERY_FULLCHARGED_CHGGPIO:
+		case SEC_BATTERY_FULLCHARGED_CHGPSY:
+			break;
 
-	/* If these is NOT full check type or NONE full check type,
-	 * it is full-charged
-	 */
-	case SEC_BATTERY_FULLCHARGED_NONE:
-	default:
-		return true;
-		break;
+		/* If these is NOT full check type or NONE full check type,
+		 * it is full-charged
+		 */
+		case SEC_BATTERY_FULLCHARGED_NONE:
+		default:
+			return true;
+			break;
 	}
+	
+	if (sec_fg_get_alt_soc() < 1000)
+	{
+		return false;
+	}
+	
 
 	if (battery->pdata->full_condition_type &
 		SEC_BATTERY_FULL_CONDITION_SOC) {
@@ -2939,15 +2945,15 @@ static int sec_bat_get_property(struct power_supply *psy,
 		val->intval = battery->charging_mode;
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
-#if defined(CONFIG_V1A) || defined(CONFIG_V2A) || defined(CONFIG_KLIMT) || defined(CONFIG_CHAGALL)
+//#if defined(CONFIG_V1A) || defined(CONFIG_V2A) || defined(CONFIG_KLIMT) || defined(CONFIG_CHAGALL)
 		val->intval = battery->capacity;
-#else
+//#else
 		/* In full-charged status, SOC is always 100% */
-		if (battery->status == POWER_SUPPLY_STATUS_FULL)
-			val->intval = 100;
-		else
-			val->intval = battery->capacity;
-#endif
+//		if (battery->status == POWER_SUPPLY_STATUS_FULL)
+//			val->intval = 100;
+//		else
+//			val->intval = battery->capacity;
+//#endif
 		break;
 	case POWER_SUPPLY_PROP_TEMP:
 		val->intval = battery->temperature;

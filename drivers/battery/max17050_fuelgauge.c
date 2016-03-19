@@ -167,7 +167,9 @@ static int max17050_get_soc(struct i2c_client *client)
 	if (max17050_read_reg(client, MAX17050_REG_SOC_VF, data) < 0)
 		return -EINVAL;
 
-	soc = ((data[1] * 100) + (data[0] * 100 / 256));
+//	soc = ((data[1] * 100) + (data[0] * 100 / 256));
+	
+	soc = sec_fg_get_alt_soc() * 10;
 
 	dev_dbg(&client->dev, "%s: raw capacity (%d)\n", __func__, soc);
 
@@ -2312,6 +2314,9 @@ bool sec_hal_fg_fuelalert_process(void *irq_data, bool is_fuel_alerted)
 	int fg_vcell = get_fuelgauge_value(fuelgauge->client, FG_VOLTAGE);
 #endif
 
+	if (sec_fg_get_alt_soc() > 0)
+		return true;
+
 	psy_do_property("battery", get,
 		POWER_SUPPLY_PROP_STATUS, value);
 	if (value.intval == POWER_SUPPLY_STATUS_CHARGING)
@@ -2586,3 +2591,121 @@ ssize_t sec_hal_fg_store_attrs(struct device *dev,
 }
 #endif
 
+static inline int power(int base, int exp)
+{
+    int result = 1;
+    while(exp) { 
+		result *= base; 
+		exp--; 
+	}
+    return result;
+}
+
+static inline unsigned int find_closest_in_array(unsigned int *array, unsigned int value)
+{
+	// unsigned ing arr_length = sizeof(array) / sizeof(unsigned int); // 100
+	if (value < array[0])
+		return 0;
+	else if (value > array[100])
+		return 100;
+	else {
+		unsigned int l = 99;
+		unsigned int step = 1;
+		unsigned int t = l;
+		while (step <= 3) {
+			unsigned int b = t - l / power(2,step);
+			if (array[b] > value)
+				t = b;
+			step++;
+		}
+		while (t > 0) {
+			if (value > array[t])
+				return t;
+			t--;
+		}
+	}
+	return 0;
+}
+
+static inline int get_current_relation_correction(int avg, int voltage)
+{
+	int avg10 = avg/10;
+	int result = 10+voltage/3000*avg10*avg10/40000;
+	if (avg > 0) {
+		if (result < 90)
+			result = 90;
+	} else 
+		result = result * -1;
+		
+	return result;
+}
+
+static unsigned int voltage_curve[] = { 3400,3450,3475,3496,3514,3530,3544,3557,3568,3578,3588,3596,3604,3612,3619,3626,3633,3640,3646,3652,3658,3664,3670,3676,3682,3688,3694,3699,3705,3711,3717,3723,3729,3735,3741,3747,3753,3759,3765,3771,3777,3783,3789,3796,3802,3808,3814,3821,3827,3834,3840,3846,3853,3859,3866,3873,3879,3886,3892,3899,3906,3913,3920,3926,3933,3940,3947,3954,3962,3969,3976,3983,3990,3998,4005,4012,4020,4027,4035,4043,4050,4058,4066,4074,4081,4089,4098,4106,4114,4123,4132,4141,4151,4161,4172,4183,4195,4207,4221,4235,4250 };
+
+static unsigned int warmup_sec = 30;
+static unsigned int alt_soc_avg_interval = 300;
+
+static unsigned int is_warm = 0;
+static unsigned int last_alt_soc_request_timestamp;
+static int last_alt_soc_value = 100;
+static unsigned int last_alt_soc_avg_timestamp;
+static int last_voltage_avg_value1 = 4250;
+static int last_voltage_avg_value2 = 4250;
+
+int sec_fg_get_alt_soc(void)
+{
+	unsigned int charging, new_alt_soc, new_voltage,
+				 curr_time = ktime_to_timeval(ktime_get_boottime()).tv_sec;
+	int avg;
+				 
+	union power_supply_propval voltage_avg, current_avg;
+	psy_do_property("sec-fuelgauge", get, POWER_SUPPLY_PROP_CURRENT_AVG, current_avg);
+	psy_do_property("sec-fuelgauge", get, POWER_SUPPLY_PROP_VOLTAGE_AVG, voltage_avg);
+	//psy_do_property("battery", get,	POWER_SUPPLY_PROP_CHARGE_NOW, charge_now);
+
+	avg = current_avg.intval;
+	charging = avg >= 0;
+	if (avg > 5000)
+		avg = avg / 1000;
+	new_voltage = voltage_avg.intval;
+	new_voltage = new_voltage - get_current_relation_correction(avg, new_voltage);
+	
+	if (!is_warm && curr_time > warmup_sec)
+		is_warm = 1;
+
+	if (is_warm && last_alt_soc_avg_timestamp > 0
+		&& curr_time - last_alt_soc_request_timestamp < alt_soc_avg_interval * 2
+		&& curr_time > alt_soc_avg_interval)
+		new_voltage = (new_voltage + last_voltage_avg_value1 + last_voltage_avg_value2) / 3;
+	
+	new_alt_soc = find_closest_in_array(voltage_curve, new_voltage);
+
+	pr_info("sec_fg_get_alt_soc: voltage_avg=%d, new_voltage=%d, avg=%d, new_alt_soc=%d, last_alt_soc=%d, is_warm=%d, curr_time=%d\n", voltage_avg.intval, new_voltage, avg, new_alt_soc, last_alt_soc_value, is_warm, curr_time);
+	
+	if (is_warm && new_alt_soc != last_alt_soc_value) {
+		if (new_alt_soc > last_alt_soc_value) {
+			if (charging && (last_alt_soc_value < 99 || avg < 30))
+				new_alt_soc = last_alt_soc_value + 1;
+			else
+				new_alt_soc = last_alt_soc_value;
+		} else
+			new_alt_soc = last_alt_soc_value - 1;
+	}
+
+	if (curr_time - last_alt_soc_avg_timestamp > alt_soc_avg_interval 
+		|| last_alt_soc_request_timestamp == 0) {
+			
+		if (last_alt_soc_request_timestamp == 0)
+			last_voltage_avg_value2 = new_voltage;
+		else
+			last_voltage_avg_value2 = last_voltage_avg_value1;
+		
+		last_voltage_avg_value1 = new_voltage;
+		last_alt_soc_avg_timestamp = curr_time;
+	}
+
+	last_alt_soc_request_timestamp = curr_time;
+	last_alt_soc_value = new_alt_soc;
+
+	return new_alt_soc * 10;
+}

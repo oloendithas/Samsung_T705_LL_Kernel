@@ -68,6 +68,7 @@ struct sec_fuelgauge_info {
 	int irq;
 };
 
+int sec_fg_get_alt_soc(void);
 bool sec_hal_fg_init(struct i2c_client *);
 bool sec_hal_fg_suspend(struct i2c_client *);
 bool sec_hal_fg_resume(struct i2c_client *);

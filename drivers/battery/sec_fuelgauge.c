@@ -38,9 +38,11 @@ static void sec_fg_get_scaled_capacity(
 				struct sec_fuelgauge_info *fuelgauge,
 				union power_supply_propval *val)
 {
-	val->intval = (val->intval < fuelgauge->pdata->capacity_min) ?
-		0 : ((val->intval - fuelgauge->pdata->capacity_min) * 1000 /
-		(fuelgauge->capacity_max - fuelgauge->pdata->capacity_min));
+	val->intval = sec_fg_get_alt_soc();
+	
+//	val->intval = (val->intval < fuelgauge->pdata->capacity_min) ?
+//		0 : ((val->intval - fuelgauge->pdata->capacity_min) * 1000 /
+//		(fuelgauge->capacity_max - fuelgauge->pdata->capacity_min));
 
 	dev_dbg(&fuelgauge->client->dev,
 		"%s: scaled capacity (%d.%d)\n",
