@@ -21,10 +21,10 @@ static struct platform_device samsung_device_battery = {
 #endif
 
 static struct exynos_tmu_platform_data exynos5_tmu_data = {
-	.trigger_levels[0] = 75,
-	.trigger_levels[1] = 90,
-	.trigger_levels[2] = 110,
-	.trigger_levels[3] = 115,
+	.trigger_levels[0] = 65,
+	.trigger_levels[1] = 75,
+	.trigger_levels[2] = 85,
+	.trigger_levels[3] = 95,
 	.trigger_level0_en = 1,
 	.trigger_level1_en = 1,
 	.trigger_level2_en = 1,
@@ -35,20 +35,20 @@ static struct exynos_tmu_platform_data exynos5_tmu_data = {
 	.cal_type = TYPE_ONE_POINT_TRIMMING,
 	.efuse_value = 55,
 	.freq_tab[0] = {
-		.freq_clip_max = 1800 * 1000,
-		.temp_level = 75,
+		.freq_clip_max = 1500 * 1000,
+		.temp_level = 65,
 	},
 	.freq_tab[1] = {
-		.freq_clip_max = 1700 * 1000,
-		.temp_level = 90,
+		.freq_clip_max = 1200 * 1000,
+		.temp_level = 75,
 	},
 	.freq_tab[2] = {
-		.freq_clip_max = 1200 * 1000,
-		.temp_level = 95,
+		.freq_clip_max = 800 * 1000,
+		.temp_level = 85,
 	},
 	.freq_tab[3] = {
-		.freq_clip_max = 600 * 1000,
-		.temp_level = 100,
+		.freq_clip_max = 650 * 1000,
+		.temp_level = 95,
 	},
 	.size[THERMAL_TRIP_ACTIVE] = 1,
 	.size[THERMAL_TRIP_PASSIVE] = 3,
