@@ -860,7 +860,7 @@ extern uint dhd_force_tx_queueing;
 #ifndef MAX_DTIM_ALLOWED_INTERVAL
 #define MAX_DTIM_ALLOWED_INTERVAL 60000 /* max allowed total beacon interval for DTIM skip */
 #endif
-#define NO_DTIM_SKIP 1
+#define NO_DTIM_SKIP 0
 #ifdef SDTEST
 /* Echo packet generator (SDIO), pkts/s */
 extern uint dhd_pktgen;

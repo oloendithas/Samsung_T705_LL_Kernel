@@ -9,9 +9,9 @@ DHDCFLAGS += -Wall -Wstrict-prototypes -Dlinux -DLINUX -DBCMDRIVER             \
         -DDHD_BCMEVENTS -DSHOW_EVENTS -DBCMDBG                                \
         -DMMC_SDIO_ABORT -DBCMSDIO -DBCMLXSDMMC -DWLP2P     \
         -DWIFI_ACT_FRAME -DARP_OFFLOAD_SUPPORT          \
-        -DKEEP_ALIVE -DCSCAN -DPKT_FILTER_SUPPORT                             \
+        -DCSCAN -DPKT_FILTER_SUPPORT                             \
         -DEMBEDDED_PLATFORM -DPNO_SUPPORT
-
+#		-DKEEP_ALIVE
 #################
 # Common feature
 #################
@@ -20,8 +20,8 @@ DHDCFLAGS += -DCUSTOMER_HW4
 DHDCFLAGS += -DWL_CFG80211
 
 # Debug
-DHDCFLAGS += -DSIMPLE_MAC_PRINT
-DHDCFLAGS += -DDEBUGFS_CFG80211
+#DHDCFLAGS += -DSIMPLE_MAC_PRINT
+#DHDCFLAGS += -DDEBUGFS_CFG80211
 # Print out kernel panic point of file and line info when assertion happened
 DHDCFLAGS += -DBCMASSERT_LOG
 
@@ -88,7 +88,7 @@ ifeq ($(CONFIG_BROADCOM_WIFI_RESERVED_MEM),y)
 endif
 
 # DTIM listen interval in suspend mode(0 means follow AP's DTIM period)
-DHDCFLAGS += -DCUSTOM_SUSPEND_BCN_LI_DTIM=0
+DHDCFLAGS += -DCUSTOM_SUSPEND_BCN_LI_DTIM=60000
 
 # Ioctl timeout 5000ms
 DHDCFLAGS += -DIOCTL_RESP_TIMEOUT=5000
@@ -421,9 +421,10 @@ DHDCFLAGS += -include "dhd_sec_feature.h"
 # Others
 #########
 
-#EXTRA_LDFLAGS += --strip-debug
+EXTRA_LDFLAGS += --strip-debug
 
-EXTRA_CFLAGS += $(DHDCFLAGS) -DDHD_DEBUG
+#EXTRA_CFLAGS += $(DHDCFLAGS) -DDHD_DEBUG
+EXTRA_CFLAGS += $(DHDCFLAGS)
 EXTRA_CFLAGS += -DSRCBASE=\"$(src)\"
 EXTRA_CFLAGS += -I$(src)/include/ -I$(src)/
 KBUILD_CFLAGS += -I$(LINUXDIR)/include -I$(shell pwd)
