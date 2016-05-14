@@ -620,7 +620,7 @@ static void usb_rx_complete(struct urb *urb)
 		/* call iod recv */
 		skb_put(skb, urb->actual_length);
 		if (pipe_data->info->rx_fixup) {
-			pr_rx_skb_with_format(iod->format, skb);
+			//pr_rx_skb_with_format(iod->format, skb);
 			pipe_data->info->rx_fixup(pipe_data, skb);
 			reprocess_skb(pipe_data, skb);
 			goto rx_submit;
@@ -636,8 +636,8 @@ static void usb_rx_complete(struct urb *urb)
 			goto rx_submit;
 		}
 
-		pr_rx_skb_with_format(iod->format, skb);
-		logging_ipc_data(MIF_IPC_CP2AP, iod, skb);
+		//pr_rx_skb_with_format(iod->format, skb);
+		//logging_ipc_data(MIF_IPC_CP2AP, iod, skb);
 		ret = iod->recv_skb(iod, &usb_ld->ld, skb);
 		if (ret < 0) {
 			mif_err("io device recv error (%d)\n", ret);
@@ -755,7 +755,7 @@ static void usb_tx_complete(struct urb *urb)
 			mif_err("TX len=%d, Complete len=%d\n",
 				urb->transfer_buffer_length, urb->actual_length);
 
-		logging_ipc_data(MIF_IPC_AP2CP, iod, skb);
+		//logging_ipc_data(MIF_IPC_AP2CP, iod, skb);
 		if (pipe_data->txpend_ts.tv_sec) {
 			/* TX flowctl was resumed */
 			mif_info("flowctl %s CH%d(%d) (%02d:%02d:%02d.%09lu)\n",
@@ -868,7 +868,7 @@ int usb_tx_skb(struct if_usb_devdata *pipe_data, struct sk_buff *skb)
 			ret = -EINVAL;
 			goto done;
 		}
-		pr_tx_skb_with_format(pipe_data->iod->format, skb);
+		//pr_tx_skb_with_format(pipe_data->iod->format, skb);
 		skb = pipe_data->info->tx_fixup(pipe_data, skb, mem_flags);
 		if (!skb) {
 			mif_debug("CDC-NCM gathers skbs to NTB\n");
@@ -923,8 +923,8 @@ int usb_tx_skb(struct if_usb_devdata *pipe_data, struct sk_buff *skb)
 		mif_net_suspend(pipe_data, MIF_NET_SUSPEND_RF_STOP);
 	spin_unlock_irqrestore(&pipe_data->sk_tx_q.lock, flag);
 
-	pr_tx_skb_with_format(pipe_data->iod->format, skb);
-	logging_ipc_data(MIF_IPC_RL2AP, pipe_data->iod, skb);
+	//pr_tx_skb_with_format(pipe_data->iod->format, skb);
+	//logging_ipc_data(MIF_IPC_RL2AP, pipe_data->iod, skb);
 	ret = usb_submit_urb(urb, mem_flags);
 	if (ret < 0) {
 		mif_err("usb_submit_urb with ret(%d)\n", ret);
@@ -1129,7 +1129,7 @@ static int usb_defered_tx_purge_anchor(struct if_usb_devdata *pipe_data)
 	while ((urb = usb_get_from_anchor(&pipe_data->tx_deferd_urbs))) {
 		usb_put_urb(urb);
 		skb = (struct sk_buff *)urb->context;
-		pr_tx_skb_with_format(pipe_data->iod->format, skb);
+		//pr_tx_skb_with_format(pipe_data->iod->format, skb);
 		dev_kfree_skb_any(skb);
 		usb_free_urb(urb);
 		cnt++;
@@ -1162,8 +1162,8 @@ static int usb_defered_tx_from_anchor(struct if_usb_devdata *pipe_data)
 				pipe_data->tx_pipe, skb->data, skb->len,
 				usb_tx_complete, (void *)skb);
 		}
-		pr_tx_skb_with_format(pipe_data->iod->format, skb);
-		logging_ipc_data(MIF_IPC_RL2AP, pipe_data->iod, skb);
+		//pr_tx_skb_with_format(pipe_data->iod->format, skb);
+		//logging_ipc_data(MIF_IPC_RL2AP, pipe_data->iod, skb);
 		ret = usb_submit_urb(urb, GFP_ATOMIC);
 		if (ret < 0) {
 			/* TODO: deferd TX again */

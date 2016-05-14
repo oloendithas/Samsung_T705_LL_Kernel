@@ -154,7 +154,7 @@ static struct nocp_cnt *check_get_cnt_done(struct list_head *target_list, struct
 				tmp_byte = ((cnt_val1 << 16) | cnt_val0) * 100;
 				tmp_cycle = ((cnt_val3 << 16) | cnt_val2) * 16;
 				do_div(tmp_byte, tmp_cycle);
-				pr_info("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
+				pr_debug("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
 						tmp_nocp->name,
 						((cnt_val1 << 16) | cnt_val0),
 						((cnt_val3 << 16) | cnt_val2),\
@@ -170,7 +170,7 @@ static struct nocp_cnt *check_get_cnt_done(struct list_head *target_list, struct
 				tmp_byte = ((cnt_val1 << 16) | cnt_val0) * 100;
 				tmp_cycle = ((cnt_val3 << 16) | cnt_val2) * 16;
 				do_div(tmp_byte, tmp_cycle);
-				pr_info("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
+				pr_debug("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
 						tmp_nocp->name,
 						((cnt_val1 << 16) | cnt_val0),
 						((cnt_val3 << 16) | cnt_val2),\
@@ -186,7 +186,7 @@ static struct nocp_cnt *check_get_cnt_done(struct list_head *target_list, struct
 				tmp_byte = ((cnt_val1 << 16) | cnt_val0) * 100;
 				tmp_cycle = ((cnt_val3 << 16) | cnt_val2) * 16;
 				do_div(tmp_byte, tmp_cycle);
-				pr_info("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
+				pr_debug("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
 						tmp_nocp->name,
 						((cnt_val1 << 16) | cnt_val0),
 						((cnt_val3 << 16) | cnt_val2),\
@@ -202,7 +202,7 @@ static struct nocp_cnt *check_get_cnt_done(struct list_head *target_list, struct
 				tmp_byte = ((cnt_val1 << 16) | cnt_val0) * 100;
 				tmp_cycle = ((cnt_val3 << 16) | cnt_val2) * 16;
 				do_div(tmp_byte, tmp_cycle);
-				pr_info("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
+				pr_debug("$$$$$$$$$ %s BYTE[%d]CYCLE[%d] Ratio[(byte/cycle * 16) *100] : %d\n",
 						tmp_nocp->name,
 						((cnt_val1 << 16) | cnt_val0),
 						((cnt_val3 << 16) | cnt_val2),\

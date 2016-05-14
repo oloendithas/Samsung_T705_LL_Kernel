@@ -580,7 +580,7 @@ int synaptics_rmi4_access_register(struct synaptics_rmi4_data *rmi4_data,
 			ii++;
 		}
 	}
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: [%c]0x%04X, length:%d, data: %s\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: [%c]0x%04X, length:%d, data: %s\n",
 		__func__, mode ? 'W' : 'R', address, length, temp);
 
 out:
@@ -592,7 +592,7 @@ static void synaptics_rmi4_release_all_finger(struct synaptics_rmi4_data *rmi4_d
 	unsigned char ii;
 
 	if (!rmi4_data->tsp_probe || !rmi4_data->f51) {
-		tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+		tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 			"%s: it is not probed or f51 is null.\n",
 			__func__);
 		return;
@@ -602,7 +602,7 @@ static void synaptics_rmi4_release_all_finger(struct synaptics_rmi4_data *rmi4_d
 		input_mt_slot(rmi4_data->input_dev, ii);
 
 		if (rmi4_data->finger[ii].state) {
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev, "[%d][RA] 0x%02x M[%d], Ver[%02X%02X, 0x%02X, 0x%02X/0x%02X/0x%02X]\n",
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "[%d][RA] 0x%02x M[%d], Ver[%02X%02X, 0x%02X, 0x%02X/0x%02X/0x%02X]\n",
 				ii, rmi4_data->finger[ii].state, rmi4_data->finger[ii].mcount,
 				rmi4_data->ic_revision_of_ic, rmi4_data->fw_version_of_ic, rmi4_data->f12.feature_enable,
 #ifdef PROXIMITY_MODE
@@ -659,7 +659,7 @@ static void synaptics_rmi4_release_sidekey(struct synaptics_rmi4_data *rmi4_data
 	for (ii = 0; ii < MAX_SIDE_BUTTONS; ii++) {
 		if (rmi4_data->sidekey_data & (1 << ii)) {
 			input_report_key(rmi4_data->input_dev, KEY_SIDE_TOUCH_0 + ii, 0);
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 				"SIDE_KEY[%d][RA]\n", ii);
 		}
 	}
@@ -985,7 +985,7 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 			if (rmi4_data->finger[finger].state) {
 				rmi4_data->finger[finger].mcount++;
 				if (rmi4_data->finger[finger].state != finger_status)
-					tsp_debug_info(true, &rmi4_data->i2c_client->dev, "[%d][C] 0x%02x T[%d/%u] M[%d]"
+					tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "[%d][C] 0x%02x T[%d/%u] M[%d]"
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 					", x = %d, y = %d, wx = %d, wy = %d\n",	finger, finger_status, tool_type,
 					rmi4_data->use_stylus, rmi4_data->finger[finger].mcount, x, y, wx, wy);
@@ -995,7 +995,7 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 #endif
 			} else {
 				new_finger_pressed = true;
-				tsp_debug_info(true, &rmi4_data->i2c_client->dev, "[%d][P] 0x%02x T[%d/%u]"
+				tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "[%d][P] 0x%02x T[%d/%u]"
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 					", x = %d, y = %d, wx = %d, wy = %d\n",	finger, finger_status, tool_type,
 					rmi4_data->use_stylus, x, y, wx, wy);
@@ -1007,7 +1007,7 @@ static int synaptics_rmi4_f12_abs_report(struct synaptics_rmi4_data *rmi4_data,
 
 		} else {
 			if (rmi4_data->finger[finger].state) {
-				tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+				tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 					"[%d][R] 0x%02x M[%d], Ver[%02X%02X, 0x%02X, 0x%02X/0x%02X/0x%02X]\n",
 					finger, finger_status, rmi4_data->finger[finger].mcount,
 					rmi4_data->ic_revision_of_ic, rmi4_data->fw_version_of_ic, rmi4_data->f12.feature_enable,
@@ -1151,7 +1151,7 @@ static int synaptics_rmi4_f51_edge_swipe(struct synaptics_rmi4_data *rmi4_data,
 	struct synaptics_rmi4_f51_handle *f51 = rmi4_data->f51;
 
 	if (!(f51->general_control & EDGE_SWIPE_EN)) {
-		tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+		tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 			"%s : Edge swipe report is disabled. General control[0x%02x]\n",
 			__func__, f51->general_control);
 		goto out;
@@ -1240,7 +1240,7 @@ static int synaptics_rmi4_f51_side_btns(struct synaptics_rmi4_data *rmi4_data,
 			input_report_key(rmi4_data->input_dev,
 						KEY_SIDE_TOUCH_0 + button, status);
 
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 				"SIDE_KEY[%d][%c] [0x%02x]\n",
 				button, status ? 'P' : 'R', rmi4_data->sidekey_data);
 		}
@@ -1353,7 +1353,7 @@ static int synaptics_rmi4_f51_lookup_detection_flag(struct synaptics_rmi4_data *
 	if (data->proximity_data[0] == 0x00) {
 #ifdef DEBUG_HOVER
 		if (f51->finger_is_hover) {
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev, "Hover[OUT]\n");
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "Hover[OUT]\n");
 			f51->finger_is_hover = false;
 		}
 #endif
@@ -1394,7 +1394,7 @@ static int synaptics_rmi4_f51_lookup_detection_flag(struct synaptics_rmi4_data *
 #ifdef DEBUG_HOVER
 		if (!f51->finger_is_hover) {
 			f51->finger_is_hover = true;
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev, "Hover[IN]"
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "Hover[IN]"
 #if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 				" x = %d, y = %d, z = %d\n", x, y, z);
 #else
@@ -1547,7 +1547,7 @@ static int synaptics_rmi4_sensor_report(struct synaptics_rmi4_data *rmi4_data)
 			return 0;
 		}
 
-		tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+		tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 			"Spontaneous reset detected\n");
 		retval = synaptics_rmi4_reinit_device(rmi4_data);
 		if (retval < 0) {
@@ -1741,7 +1741,7 @@ static int synaptics_rmi4_f11_init(struct synaptics_rmi4_data *rmi4_data,
 		rmi4_data->sensor_max_x = rmi4_data->board->sensor_max_x;
 		rmi4_data->sensor_max_y = rmi4_data->board->sensor_max_y;
 
-		tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+		tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 				"%s: Function %02x read failed, run dtsi coords. max x = %d max y = %d\n",
 				__func__, fhandler->fn_number,
 				rmi4_data->sensor_max_x,
@@ -1820,7 +1820,7 @@ static int synaptics_rmi4_f12_set_feature(struct synaptics_rmi4_data *rmi4_data)
 		goto out;
 	}
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: [0x%02X], Set %s\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: [0x%02X], Set %s\n",
 		 __func__, rmi4_data->f12.feature_enable,
 		(rmi4_data->f12.feature_enable == (CLEAR_COVER_MODE_EN | FAST_GLOVE_DECTION_EN)) ? "Clear cover & Fast glove mode" :
 		(rmi4_data->f12.feature_enable == (FLIP_COVER_MODE_EN | FAST_GLOVE_DECTION_EN)) ? "Flip cover & Fast glove mode" :
@@ -2175,7 +2175,7 @@ static int synaptics_rmi4_f12_init(struct synaptics_rmi4_data *rmi4_data,
 		return retval;
 	}
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 			"%s: %02x max_x,y(%d,%d) num_Rx,Tx(%d,%d), num_finger(%d),  node:%d, threshold:%d, gloved sensitivity:%x\n",
 			__func__, fhandler->fn_number,
 			rmi4_data->sensor_max_x, rmi4_data->sensor_max_y,
@@ -2478,7 +2478,7 @@ static int synaptics_rmi4_f51_set_custom_rezero(struct synaptics_rmi4_data *rmi4
 			__func__);
 		return retval;
 	}
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s\n", __func__);
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s\n", __func__);
 
 	return 0;
 }
@@ -2540,7 +2540,7 @@ static int synaptics_rmi4_f51_set_proximity_enables(struct synaptics_rmi4_data *
 	struct synaptics_rmi4_f51_handle *f51 = rmi4_data->f51;
 	int retval;
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: [0x%02X], Hover is %s\n", __func__,
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: [0x%02X], Hover is %s\n", __func__,
 		f51->proximity_enables, (f51->proximity_enables & FINGER_HOVER_EN) ? "enabled" : "disabled");
 
 	retval = synaptics_rmi4_i2c_write(rmi4_data,
@@ -2601,7 +2601,7 @@ static int synaptics_rmi4_f51_set_general_control_2(struct synaptics_rmi4_data *
 	struct synaptics_rmi4_f51_handle *f51 = rmi4_data->f51;
 	int retval;
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: [0x%02X]\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: [0x%02X]\n",
 		__func__, f51->general_control_2);
 
 	retval = synaptics_rmi4_i2c_write(rmi4_data,
@@ -2645,7 +2645,7 @@ static int synaptics_rmi4_f51_set_init(struct synaptics_rmi4_data *rmi4_data)
 	synaptics_rmi4_i2c_read(rmi4_data, f51->general_control_2_addr,
 			&f51->general_control_2, sizeof(f51->general_control_2));
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: General control[0x%02X],2[0x%02X] Hsync is %s\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: General control[0x%02X],2[0x%02X] Hsync is %s\n",
 			__func__, f51->general_control, f51->general_control_2,
 			(f51->general_control & HSYNC_STATUS) ? "GD" : "NG");
 
@@ -2827,7 +2827,7 @@ static int synaptics_rmi4_check_status(struct synaptics_rmi4_data *rmi4_data)
 				__func__, __LINE__, retval);
 		return retval;
 	}
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: Device status[0x%02x] status.code[%d]\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: Device status[0x%02x] status.code[%d]\n",
 			__func__, status.data[0], status.status_code);
 
 	while (status.status_code == STATUS_CRC_IN_PROGRESS) {
@@ -2850,7 +2850,7 @@ static int synaptics_rmi4_check_status(struct synaptics_rmi4_data *rmi4_data)
 
 	if (status.flash_prog == 1) {
 		rmi4_data->flash_prog_mode = true;
-		tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: In flash prog mode, status = 0x%02x\n",
+		tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: In flash prog mode, status = 0x%02x\n",
 				__func__, status.status_code);
 	} else {
 		rmi4_data->flash_prog_mode = false;
@@ -3225,7 +3225,7 @@ static int synaptics_rmi4_query_device(struct synaptics_rmi4_data *rmi4_data)
 
 flash_prog_mode:
 	rmi4_data->num_of_intr_regs = (intr_count + 7) / 8;
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 			"%s: Number of interrupt registers = %d sum of intr_count = %d\n",
 			__func__, rmi4_data->num_of_intr_regs, intr_count);
 
@@ -3268,9 +3268,9 @@ flash_prog_mode:
 	}
 	memcpy(&rmi->pr_number, f01_pr_number, 3);
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: Product ID [%s. %d]\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: Product ID [%s. %d]\n",
 		__func__, rmi4_data->rmi4_mod_info.product_id_string, rmi4_data->product_id);
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: Result, date, revision, version, pr_num, b/l [%d, %02d/%02d, 0x%02X, 0x%02X, PR%d, %c%c[%c.%c]]\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: Result, date, revision, version, pr_num, b/l [%d, %02d/%02d, 0x%02X, 0x%02X, PR%d, %c%c[%c.%c]]\n",
 		__func__, rmi4_data->fw_release_date_of_ic >> 12,
 		(rmi4_data->fw_release_date_of_ic >> 8) & 0x0F,
 		rmi4_data->fw_release_date_of_ic & 0x00FF,
@@ -3319,7 +3319,7 @@ flash_prog_mode:
 	/* Enable the interrupt sources */
 	for (ii = 0; ii < rmi4_data->num_of_intr_regs; ii++) {
 		if (rmi4_data->intr_mask[ii] != 0x00) {
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: Interrupt enable[%d] = 0x%02x\n",
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: Interrupt enable[%d] = 0x%02x\n",
 					__func__, ii, rmi4_data->intr_mask[ii]);
 			intr_addr = rmi4_data->f01_ctrl_base_addr + 1 + ii;
 			retval = synaptics_rmi4_i2c_write(rmi4_data,
@@ -3554,7 +3554,7 @@ static int synaptics_rmi4_reinit_device(struct synaptics_rmi4_data *rmi4_data)
 
 	for (ii = 0; ii < rmi4_data->num_of_intr_regs; ii++) {
 		if (rmi4_data->intr_mask[ii] != 0x00) {
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 					"%s: Interrupt enable mask register[%d] = 0x%02x\n",
 					__func__, ii, rmi4_data->intr_mask[ii]);
 			intr_addr = rmi4_data->f01_ctrl_base_addr + 1 + ii;
@@ -3670,7 +3670,7 @@ static void synaptics_charger_conn(struct synaptics_rmi4_data *rmi4_data,
 				__func__);
 	}
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 		"%s: device_control : 0x%x, ta_status : %x\n",
 		__func__, charger_connected, ta_status);
 }
@@ -3681,7 +3681,7 @@ static void synaptics_ta_cb(struct synaptics_rmi_callbacks *cb, int ta_status)
 			container_of(cb, struct synaptics_rmi4_data, callbacks);
 	const struct synaptics_rmi4_platform_data *pdata = rmi4_data->board;
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev,
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev,
 		"%s: ta_status : %x\n", __func__, ta_status);
 
 	rmi4_data->ta_status = ta_status;
@@ -3729,7 +3729,7 @@ static void synaptics_rmi4_f51_finger_timer(unsigned long data)
 		input_sync(rmi4_data->input_dev);
 #ifdef DEBUG_HOVER
 		if (rmi4_data->f51->finger_is_hover) {
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev, "Hover[OUT][Timer]\n");
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "Hover[OUT][Timer]\n");
 			rmi4_data->f51->finger_is_hover = false;
 		}
 #endif
@@ -3809,7 +3809,7 @@ static int synaptics_rmi4_init_exp_fn(struct synaptics_rmi4_data *rmi4_data)
 
 	list_for_each_entry(exp_fhandler, &rmi->exp_fn_list, link) {
 		if (exp_fhandler->initialized) {
-			tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s: [%d] is already initialzied.\n",
+			tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s: [%d] is already initialzied.\n",
 					__func__, exp_fhandler->fn_type);
 			continue;
 		}
@@ -3905,7 +3905,7 @@ static int synaptics_power_ctrl(void *data, bool on)
 		return PTR_ERR(regulator_avdd);
 	}
 
-	tsp_debug_info(true, dev, "%s: %s\n", __func__, on ? "on" : "off");
+	tsp_debug_dbg(true, dev, "%s: %s\n", __func__, on ? "on" : "off");
 
 	if (on) {
 		retval = regulator_enable(regulator_dvdd);
@@ -4100,7 +4100,7 @@ static int synaptics_rmi4_setup_drv_data(struct i2c_client *client)
 
 	if (pdata->get_ddi_type) {
 		rmi4_data->ddi_type = pdata->get_ddi_type();
-		tsp_debug_info(true, &client->dev, "%s: DDI Type is %s[%d]\n",
+		tsp_debug_dbg(true, &client->dev, "%s: DDI Type is %s[%d]\n",
 			__func__, rmi4_data->ddi_type ? "MAGNA" : "SDC", rmi4_data->ddi_type);
 	}
 
@@ -4346,7 +4346,7 @@ static void synaptics_rmi4_sensor_sleep(struct synaptics_rmi4_data *rmi4_data)
 
 	mutex_lock(&rmi4_data->rmi4_device_mutex);
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s, from %s\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s, from %s\n",
 			__func__, rmi4_data->sensor_sleep ? "Sleep" : "Wake");
 
 #ifdef SIDE_TOUCH
@@ -4384,7 +4384,7 @@ static void synaptics_rmi4_sensor_sleep(struct synaptics_rmi4_data *rmi4_data)
 
 	rmi4_data->sensor_sleep = true;
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s : [F01_CTRL] 0x%02X, [F51_CTRL] 0x%02X/0x%02X/0x%02X]\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s : [F01_CTRL] 0x%02X, [F51_CTRL] 0x%02X/0x%02X/0x%02X]\n",
 		__func__, device_ctrl, rmi4_data->f51->proximity_enables, rmi4_data->f51->general_control, rmi4_data->f51->general_control_2);
 
 	msleep(SYNAPTICS_DEEPSLEEP_TIME);
@@ -4415,7 +4415,7 @@ static void synaptics_rmi4_sensor_wake(struct synaptics_rmi4_data *rmi4_data)
 
 	mutex_lock(&rmi4_data->rmi4_device_mutex);
 
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s, from %s\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s, from %s\n",
 			__func__, rmi4_data->sensor_sleep ? "sleep" : "wake");
 
 #ifdef SIDE_TOUCH
@@ -4452,7 +4452,7 @@ static void synaptics_rmi4_sensor_wake(struct synaptics_rmi4_data *rmi4_data)
 	}
 
 	rmi4_data->sensor_sleep = false;
-	tsp_debug_info(true, &rmi4_data->i2c_client->dev, "%s : [F01_CTRL] 0x%02X, [F51_CTRL] 0x%02X/0x%02X/0x%02X]\n",
+	tsp_debug_dbg(true, &rmi4_data->i2c_client->dev, "%s : [F01_CTRL] 0x%02X, [F51_CTRL] 0x%02X/0x%02X/0x%02X]\n",
 		__func__, device_ctrl, rmi4_data->f51->proximity_enables, rmi4_data->f51->general_control, rmi4_data->f51->general_control_2);
 out:
 	mutex_unlock(&rmi4_data->rmi4_device_mutex);

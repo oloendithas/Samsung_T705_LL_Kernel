@@ -724,7 +724,7 @@ static void fg_periodic_read(struct i2c_client *client)
 			i = 13;
 	}
 
-	dev_info(&client->dev, "%s", str);
+	dev_dbg(&client->dev, "%s", str);
 
 	kfree(str);
 }
@@ -1203,7 +1203,7 @@ static int fg_read_current(struct i2c_client *client, int unit)
 		avg_current *= -1;
 
 	if (!(fuelgauge->info.pr_cnt++ % PRINT_COUNT)) {
-		fg_test_print(client);
+		//fg_test_print(client);
 		dev_info(&client->dev, "%s: CURRENT(%dmA), AVG_CURRENT(%dmA)\n",
 			__func__, i_current, avg_current);
 		fuelgauge->info.pr_cnt = 1;
