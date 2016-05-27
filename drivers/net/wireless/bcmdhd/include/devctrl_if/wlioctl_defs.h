@@ -1036,7 +1036,7 @@
 /* when sgi_tx==WLC_SGI_ALL, bypass rate selection, enable sgi for all mcs */
 #define WLC_SGI_ALL				0x02
 
-#define LISTEN_INTERVAL			10
+#define LISTEN_INTERVAL			60
 /* interference mitigation options */
 #define	INTERFERE_OVRRIDE_OFF	-1	/* interference override off */
 #define	INTERFERE_NONE	0	/* off */
