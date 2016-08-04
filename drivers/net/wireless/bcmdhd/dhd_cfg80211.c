@@ -250,7 +250,7 @@ int dhd_cfg80211_testmode_cmd(struct wiphy *wiphy, void *data, int len)
 	if (index == DHD_BAD_IF) {
 	WL_ERR(("Bad ifidx from wdev:%p\n", wdev));
 		return BCME_ERROR;
-}
+	}
 #endif /* LINUX_VERSION_CODE >= KERNEL_VERSION(3, 11, 0) */
 
 	ioc.cmd = nlioc->cmd;

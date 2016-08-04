@@ -729,6 +729,7 @@ static int dhd_pm_callback(struct notifier_block *nfb, unsigned long action, voi
 	switch (action) {
 		case PM_HIBERNATION_PREPARE:
 		case PM_SUSPEND_PREPARE:
+		case PM_POST_RESTORE:
 			suspend = TRUE;
 			break;
 		case PM_POST_HIBERNATION:
@@ -962,9 +963,9 @@ module_param(wifi_pm_suspended, int, 0660);
 static int dhd_set_suspend(int value, dhd_pub_t *dhd)
 {
 #ifdef CONFIG_BCMDHD_WIFI_PM
-int power_mode = wifi_pm_awake;
+	int power_mode = wifi_pm_awake;
 #else
-int power_mode = PM_MAX;
+	int power_mode = PM_MAX;
 #endif
 
 	/* wl_pkt_filter_enable_t	enable_parm; */
@@ -1017,13 +1018,8 @@ int power_mode = PM_MAX;
 #endif
 				/* Kernel suspended */
 				DHD_INFO(("%s: force extra Suspend setting \n", __FUNCTION__));
-#ifdef CONFIG_BCMDHD_WIFI_PM
+#if defined(CONFIG_BCMDHD_WIFI_PM) || defined(SUPPORT_PM2_ONLY)
 				dhd_wl_ioctl_cmd(dhd, WLC_SET_PM, (char *)&power_mode, sizeof(power_mode), TRUE, 0);
-#else
-#ifndef SUPPORT_PM2_ONLY
-				dhd_wl_ioctl_cmd(dhd, WLC_SET_PM, (char *)&power_mode,
-				                 sizeof(power_mode), TRUE, 0);
-#endif /* SUPPORT_PM2_ONLY */
 #endif
 				/* Enable packet filter, only allow unicast packet to send up */
 				dhd_enable_packet_filter(1, dhd);
